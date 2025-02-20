@@ -1,5 +1,6 @@
 const express = require("express");
 const Widget = require("../models/widget");
+const generateUniqueId = require("../utils/generateUniqueId");
 
 const router = express.Router();
 
@@ -9,7 +10,7 @@ router.get("/org/:orgId", async (req, res) => {
     const widgets = await Widget.find({ orgId: req.params.orgId });
     res.json(widgets);
   } catch (error) {
-    res.status(500).json({ error: "Server error" });
+    res.status(500).json({ error: "Server error", message: error?.message });
   }
 });
 
@@ -17,29 +18,45 @@ router.get("/org/:orgId", async (req, res) => {
 router.get("/:widgetId", async (req, res) => {
   try {
     const widget = await Widget.findOne({ widgetId: req.params.widgetId });
-    if (!widget) return res.status(404).json({ error: "Widget not found" });
+    if (!widget) return res.status(404).json({ message: "Widget not found" });
     res.json(widget);
   } catch (error) {
-    res.status(500).json({ error: "Server error" });
+    res.status(500).json({ error: "Server error", message: error?.message });
   }
 });
 
 // Update or create widget settings (Admin Panel will call this)
-router.put("/:widgetId", async (req, res) => {
+router.put("/create-update-widget", async (req, res) => {
   try {
-    const { widgetId } = req.params;
-    if (!widgetId) {
-      return res.status(400).json({ error: "widgetId is required" });
+    const { orgId, widgetId } = req.query;
+    const { whatsappNumber, brandLogo } = req.body;
+    if (!orgId || !whatsappNumber || !brandLogo) {
+      return res.status(400).json({ message: "Missing required fields" });
     }
 
-    const updatedWidget = await Widget.findOneAndUpdate(
-      { widgetId },
-      { $set: req.body },
-      { new: true, upsert: true, setDefaultsOnInsert: true }
-    );
+    let updatedWidget;
 
-    if (!updatedWidget) {
-      return res.status(404).json({ error: "Widget not found after update" });
+    if (widgetId) {
+      // Update existing widget
+      updatedWidget = await Widget.findOneAndUpdate(
+        { widgetId },
+        { $set: req.body },
+        { new: true }
+      );
+
+      if (!updatedWidget) {
+        return res.status(404).json({ message: "Widget not found" });
+      }
+    } else {
+      // Create new widget
+      const uniqueWidgetId = generateUniqueId();
+      updatedWidget = await Widget.create({
+        widgetId: uniqueWidgetId,
+        orgId,
+        whatsappNumber,
+        brandLogo,
+        ...req.body,
+      });
     }
 
     res.json(updatedWidget);

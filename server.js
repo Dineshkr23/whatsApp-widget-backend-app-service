@@ -19,6 +19,11 @@ mongoose
   .catch((err) => console.error("❌ MongoDB Connection Error:", err));
 
 // Routes
+
+app.get("/", (req, res) => {
+  res.send("🚀 Server running");
+});
+
 app.use("/api/widgets", widgetRoutes);
 
 app.use(express.static("public"));
