@@ -1,6 +1,8 @@
 (function () {
   const widgetId = document.currentScript.getAttribute("widget-id");
-  const serverUrl = "https://widget.pointofconnect.com";
+  const sourceUrl = document.currentScript.src;
+  const { origin } = new URL(sourceUrl);
+  const serverUrl = origin;
 
   function createWidget(settings) {
     // Load Google Font Poppins dynamically
