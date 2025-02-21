@@ -11,6 +11,7 @@ const widgetSchema = new mongoose.Schema(
     partnerLogo: { type: String },
     orgId: { type: String, required: true },
     widgetName: { type: String, required: true },
+    countryCode: { type: String, default: "+91" },
     marginleft: { type: String, default: "30px" },
     brandName: { type: String, default: "Brand" },
     marginright: { type: String, default: "30px" },

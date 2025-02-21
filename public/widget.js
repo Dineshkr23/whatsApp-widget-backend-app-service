@@ -24,8 +24,6 @@
     // Determine position
     const isBottomLeft = settings.position === "bottom-left";
     const marginSide = isBottomLeft ? "left" : "right";
-    console.log(marginSide);
-
     // Create the chat button
     const widgetButton = document.createElement("button");
     widgetButton.id = "custom-widget-button";
@@ -80,7 +78,8 @@
     chatContainer.id = "chat-container";
     chatContainer.style.position = "fixed";
     chatContainer.style.bottom = "70px";
-    chatContainer.style.right = "20px";
+    chatContainer.style[marginSide] =
+      settings[`margin${marginSide}px`] || "20px";
     chatContainer.style.width = "300px";
     chatContainer.style.height = "auto";
     chatContainer.style.backgroundColor = "#fff";
@@ -203,7 +202,7 @@
     startButton.style.cursor = "pointer";
     startButton.onclick = () => {
       window.open(
-        `https://wa.me/+91${settings.whatsappNumber}?text=${settings.preFilledMessage}`,
+        `https://wa.me/${settings.countryCode}${settings.whatsappNumber}?text=${settings.preFilledMessage}`,
         "_blank"
       );
     };
