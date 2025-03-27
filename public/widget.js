@@ -15,10 +15,40 @@
     // Create scoped styles for the widget
     const widgetStyle = document.createElement("style");
     widgetStyle.innerHTML = `
-      #chat-container, #custom-widget-button, #chat-container * {
-        font-family: 'Poppins', sans-serif !important;
+  #chat-container, #custom-widget-button, #chat-container * {
+    font-family: 'Poppins', sans-serif !important;
+  }
+`;
+
+    if (settings.disableMobileWidget) {
+      widgetStyle.innerHTML += `
+    @media (max-width: 767px) {
+      #chat-container, #custom-widget-button, #chat-text {
+        display: none !important;
       }
-    `;
+    }
+  `;
+    }
+
+    if (!settings.disableMobileWidget) {
+      widgetStyle.innerHTML += `
+    @media (max-width: 767px) {
+      #chat-text{
+        display: none !important;
+      },
+      #chat-icon{
+        margin-right: 0 !important;
+      },
+      #custom-widget-button {
+        width: 50px;
+        height: 50px;
+        padding: 11px;
+        border-radius: 50%;
+      }
+    }
+  `;
+    }
+
     document.head.appendChild(widgetStyle);
 
     // Determine position
@@ -31,7 +61,7 @@
     widgetButton.style.bottom = `${settings.marginbottom}px` || "30px";
     widgetButton.style[marginSide] =
       settings[`margin${marginSide}px`] || "30px";
-    widgetButton.style.padding = "10px 15px";
+    widgetButton.style.padding = "11px";
     widgetButton.style.backgroundColor =
       settings.buttonBackgroundColor || "#000";
     widgetButton.style.borderRadius = `${settings.borderRadius}px` || "24px";
@@ -232,7 +262,7 @@
         setTimeout(() => {
           widgetButton.style.width = "auto";
           widgetButton.style.height = "auto";
-          widgetButton.style.padding = "10px 15px";
+          widgetButton.style.padding = "11px";
           widgetButton.style.borderRadius = "50px";
           document.getElementById("chat-text").style.display = "inline";
         }, 300);
