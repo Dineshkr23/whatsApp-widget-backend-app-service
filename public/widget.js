@@ -120,6 +120,8 @@
     chatContainer.style.transform = "translateY(50px)";
     chatContainer.style.transition =
       "transform 0.3s ease-out, opacity 0.3s ease-out";
+    chatContainer.style.pointerEvents = "none";
+    chatContainer.style.visibility = "hidden";
 
     // Chat Header (Logo + Name)
     const chatHeader = document.createElement("div");
@@ -249,6 +251,8 @@
       if (chatContainer.style.opacity === "0") {
         chatContainer.style.opacity = "1";
         chatContainer.style.transform = "translateY(-20px)";
+        chatContainer.style.pointerEvents = "auto";
+        chatContainer.style.visibility = "visible";
         widgetButton.style.width = "50px";
         widgetButton.style.height = "50px";
         widgetButton.style.padding = "10px";
@@ -259,6 +263,8 @@
       } else {
         chatContainer.style.opacity = "0";
         chatContainer.style.transform = "translateY(50px)";
+        chatContainer.style.pointerEvents = "none";
+        chatContainer.style.visibility = "hidden";
         setTimeout(() => {
           widgetButton.style.width = "auto";
           widgetButton.style.height = "auto";
