@@ -23,6 +23,7 @@ const widgetSchema = new mongoose.Schema(
     brandSubtitle: { type: String, default: "Sub Title" },
     buttonText: { type: String, default: "Chat with us" },
     disableMobileWidget: { type: Boolean, default: false },
+    enabledAnimation: { type: Boolean, default: false },
     chatBackgroundColor: { type: String, default: "#000" },
     buttonBackgroundColor: { type: String, default: "#000" },
     widgetId: { type: String, unique: true, required: true },

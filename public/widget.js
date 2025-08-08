@@ -18,6 +18,38 @@
   #chat-container, #custom-widget-button, #chat-container * {
     font-family: 'Poppins', sans-serif !important;
   }
+
+  @keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+      transform: translateY(0);
+    }
+    40% {
+      transform: translateY(-10px);
+    }
+    60% {
+      transform: translateY(-5px);
+    }
+  }
+
+  #custom-widget-button {
+    animation: bounce 2s ease-in-out infinite;
+  }
+
+  #custom-widget-button:hover {
+    animation-play-state: paused;
+  }
+
+  #custom-widget-button.chat-open {
+    animation: none !important;
+  }
+
+  #custom-widget-button.chat-open:hover {
+    animation: none !important;
+  }
+
+  #custom-widget-button[data-chat-open="true"] {
+    animation: none !important;
+  }
 `;
 
     if (settings.disableMobileWidget) {
@@ -249,6 +281,7 @@
     //   // Button Click Event (Open/Close Chat)
     widgetButton.onclick = () => {
       if (chatContainer.style.opacity === "0") {
+        // Open chat window
         chatContainer.style.opacity = "1";
         chatContainer.style.transform = "translateY(-20px)";
         chatContainer.style.pointerEvents = "auto";
@@ -259,12 +292,26 @@
         widgetButton.style.borderRadius = "50%";
         widgetButton.style.justifyContent = "center";
         document.getElementById("chat-text").style.display = "none";
-        document.getElementById("chat-icon").style.marginRight = "0";
+
+        // Stop the bouncing animation when chat window opens
+        widgetButton.classList.add("chat-open");
+        widgetButton.setAttribute("data-chat-open", "true");
       } else {
+        // Close chat window
         chatContainer.style.opacity = "0";
         chatContainer.style.transform = "translateY(50px)";
         chatContainer.style.pointerEvents = "none";
         chatContainer.style.visibility = "hidden";
+
+        // Resume the bouncing animation when chat window closes
+        widgetButton.classList.remove("chat-open");
+        widgetButton.removeAttribute("data-chat-open");
+        // Force restart the animation
+        widgetButton.style.animation = "none";
+        setTimeout(() => {
+          widgetButton.style.animation = "bounce 2s ease-in-out infinite";
+        }, 10);
+
         setTimeout(() => {
           widgetButton.style.width = "auto";
           widgetButton.style.height = "auto";
