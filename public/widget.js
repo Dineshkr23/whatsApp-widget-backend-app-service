@@ -31,23 +31,23 @@
     }
   }
 
-  #custom-widget-button {
+  #custom-widget-button.animated {
     animation: bounce 2s ease-in-out infinite;
   }
 
-  #custom-widget-button:hover {
+  #custom-widget-button.animated:hover {
     animation-play-state: paused;
   }
 
-  #custom-widget-button.chat-open {
+  #custom-widget-button.animated.chat-open {
     animation: none !important;
   }
 
-  #custom-widget-button.chat-open:hover {
+  #custom-widget-button.animated.chat-open:hover {
     animation: none !important;
   }
 
-  #custom-widget-button[data-chat-open="true"] {
+  #custom-widget-button.animated[data-chat-open="true"] {
     animation: none !important;
   }
 `;
@@ -106,6 +106,12 @@
     widgetButton.style.justifyContent = "center";
     widgetButton.style.transition = "all 0s ease-in-out";
     widgetButton.style.zIndex = "999999";
+
+    // Add animated class if animation is enabled
+    if (settings.enabledAnimation) {
+      widgetButton.classList.add("animated");
+    }
+
     // Create the SVG element dynamically
     const svgContainer = document.createElement("span");
     svgContainer.style.display = "flex";
@@ -306,11 +312,14 @@
         // Resume the bouncing animation when chat window closes
         widgetButton.classList.remove("chat-open");
         widgetButton.removeAttribute("data-chat-open");
-        // Force restart the animation
-        widgetButton.style.animation = "none";
-        setTimeout(() => {
-          widgetButton.style.animation = "bounce 2s ease-in-out infinite";
-        }, 10);
+
+        // Force restart the animation only if animation is enabled
+        if (settings.enabledAnimation) {
+          widgetButton.style.animation = "none";
+          setTimeout(() => {
+            widgetButton.style.animation = "bounce 2s ease-in-out infinite";
+          }, 10);
+        }
 
         setTimeout(() => {
           widgetButton.style.width = "auto";
